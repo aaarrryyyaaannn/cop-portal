@@ -1,25 +1,46 @@
 # Police FIR Management Portal
 
-PWA with offline-first architecture, MongoDB, JWT & role-based authentication.
+PWA with offline-first architecture, MongoDB, JWT & role-based authentication.  
+**Single repo** – frontend + backend deployed together on Vercel.
 
 ## Deploy to Vercel
 
-1. **Push to GitHub** (or GitLab/Bitbucket)
+### Option A: Vercel Dashboard
+
+1. **Push to GitHub**  
+   Create a repo and push:
+   ```bash
+   git remote add origin https://github.com/YOUR_USERNAME/fir-portal.git
+   git push -u origin main
+   ```
 
 2. **Import on Vercel**
-   - Go to [vercel.com](https://vercel.com) → New Project → Import your repo
-   - Framework: Other (no framework)
-   - Root Directory: `./` (project root)
+   - Go to [vercel.com/new](https://vercel.com/new)
+   - Import your GitHub repo
+   - Framework: **Other** (or leave as auto-detected)
+   - Root Directory: `./`
 
-3. **Environment Variables** (Vercel Dashboard → Project → Settings → Environment Variables)
-   - `MONGODB_URI` – MongoDB Atlas connection string (e.g. `mongodb+srv://user:pass@cluster.mongodb.net/fir-portal`)
-   - `JWT_SECRET` – Strong random string for JWT signing
+3. **Environment Variables** → Project → Settings → Environment Variables  
+   - `MONGODB_URI` – MongoDB Atlas URI (e.g. `mongodb+srv://user:pass@cluster.mongodb.net/fir-portal`)  
+   - `JWT_SECRET` – Strong random string (e.g. `openssl rand -hex 32`)
 
 4. **Deploy** – Vercel will run `npm run build` and deploy.
 
-5. **Seed data** (first time)
-   - Run locally: `cd backend && npm run seed` (with `MONGODB_URI` set)
-   - Or use MongoDB Atlas UI to add users: admin / admin123, officer1 / officer123, citizen1 / citizen123
+### Option B: Vercel CLI
+
+```bash
+npx vercel login
+npx vercel
+# Add MONGODB_URI and JWT_SECRET when prompted
+```
+
+### Seed MongoDB (first time)
+
+```bash
+cd backend
+cp .env.example .env   # Add your MONGODB_URI
+npm run seed
+```
 
 ## Local Development
 
