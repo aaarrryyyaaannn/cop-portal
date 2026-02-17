@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build
+dist
+build
+dev-dist
+.vercel
+
+# Env
+.env
+.env.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+*.log
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
