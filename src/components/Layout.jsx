@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard, FileText, Search, FolderOpen, Shield, Users, BarChart3,
-  Settings, LogOut, Menu, X, Bell
+  Settings, LogOut, Menu, X, Bell, Briefcase, Map, ShieldAlert
 } from 'lucide-react'
 import NotificationsDropdown from './NotificationsDropdown'
 
@@ -22,23 +22,32 @@ export default function Layout() {
     { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/file-fir', icon: FileText, label: 'File FIR' },
     { to: '/track-fir', icon: Search, label: 'Track FIR' },
+    { to: '/alerts', icon: Bell, label: 'News & Alerts' },
+    { to: '/map', icon: Map, label: 'Crime Map' },
   ]
   const officerNav = [
     { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/file-fir', icon: FileText, label: 'File FIR' },
     { to: '/track-fir', icon: Search, label: 'Track FIR' },
     { to: '/cases', icon: FolderOpen, label: 'Case Management' },
+    { to: '/criminals', icon: ShieldAlert, label: 'Criminals' },
     { to: '/evidence', icon: Shield, label: 'Evidence' },
     { to: '/reports', icon: BarChart3, label: 'Reports' },
+    { to: '/alerts', icon: Bell, label: 'News & Alerts' },
+    { to: '/map', icon: Map, label: 'Crime Map' },
   ]
   const adminNav = [
     { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/file-fir', icon: FileText, label: 'File FIR' },
     { to: '/track-fir', icon: Search, label: 'Track FIR' },
     { to: '/cases', icon: FolderOpen, label: 'Case Management' },
+    { to: '/criminals', icon: ShieldAlert, label: 'Criminals' },
     { to: '/evidence', icon: Shield, label: 'Evidence' },
     { to: '/users', icon: Users, label: 'User Management' },
+    { to: '/workforce', icon: Briefcase, label: 'Workforce' },
     { to: '/reports', icon: BarChart3, label: 'Reports' },
+    { to: '/alerts', icon: Bell, label: 'News & Alerts' },
+    { to: '/map', icon: Map, label: 'Crime Map' },
   ]
 
   const navItems = user?.role === 'admin' ? adminNav : user?.role === 'officer' ? officerNav : citizenNav

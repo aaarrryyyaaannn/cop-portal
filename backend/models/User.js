@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     default: 'citizen'
   },
   officerRole: { type: String, enum: ['Investigator', 'Supervisor', 'Clerk'], default: null },
+  dutyStatus: { type: String, enum: ['available', 'on_duty', 'on_leave'], default: 'available' },
   status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' }
 }, { timestamps: true })
 

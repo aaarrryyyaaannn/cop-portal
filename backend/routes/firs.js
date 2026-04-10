@@ -42,6 +42,37 @@ router.get('/', authenticate, async (req, res) => {
   }
 })
 
+router.get('/track/:firNumber', authenticate, async (req, res) => {
+  try {
+    const fir = await FIR.findOne({ firNumber: req.params.firNumber })
+      .populate('assignedTo', 'name email phone')
+      .populate('filedBy', 'name')
+    if (!fir) return res.status(404).json({ message: 'FIR not found' })
+
+    const isOwner = fir.filedBy?._id?.toString() === req.user._id.toString()
+    const isAssigned = fir.assignedTo?._id?.toString() === req.user._id.toString()
+    const isStaff = ['admin', 'officer'].includes(req.user.role)
+
+    if (!isOwner && !isAssigned && !isStaff) {
+      return res.status(403).json({ message: 'Access denied' })
+    }
+
+    res.json(fir)
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' })
+  }
+})
+
+router.get('/data/hotspots', authenticate, requireRole('admin', 'officer'), async (req, res) => {
+  try {
+    const firs = await FIR.find({ 'incident.coordinates': { $exists: true } })
+      .select('incident.coordinates incident.crimeType incident.severity status')
+    res.json(firs)
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' })
+  }
+})
+
 router.get('/:id', authenticate, async (req, res) => {
   try {
     const fir = await FIR.findById(req.params.id)
@@ -55,27 +86,6 @@ router.get('/:id', authenticate, async (req, res) => {
     const isOfficer = req.user.role === 'officer'
 
     if (!isOwner && !isAssigned && !isAdmin && !isOfficer) {
-      return res.status(403).json({ message: 'Access denied' })
-    }
-
-    res.json(fir)
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' })
-  }
-})
-
-router.get('/track/:firNumber', authenticate, async (req, res) => {
-  try {
-    const fir = await FIR.findOne({ firNumber: req.params.firNumber })
-      .populate('assignedTo', 'name email phone')
-      .populate('filedBy', 'name')
-    if (!fir) return res.status(404).json({ message: 'FIR not found' })
-
-    const isOwner = fir.filedBy?._id?.toString() === req.user._id.toString()
-    const isAssigned = fir.assignedTo?._id?.toString() === req.user._id.toString()
-    const isStaff = ['admin', 'officer'].includes(req.user.role)
-
-    if (!isOwner && !isAssigned && !isStaff) {
       return res.status(403).json({ message: 'Access denied' })
     }
 

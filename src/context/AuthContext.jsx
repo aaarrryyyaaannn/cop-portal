@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { api, getToken } from '../lib/api'
-import { getStoredUser, setStoredUser, clearStoredUser } from '../lib/db'
 
 const AuthContext = createContext(null)
 
@@ -20,18 +19,9 @@ export function AuthProvider({ children }) {
         if (token) {
           const { user } = await api.getMe()
           setUser(normalizeUser(user))
-          await setStoredUser(user, token)
-        } else {
-          const stored = await getStoredUser()
-          if (stored?.user) setUser(normalizeUser(stored.user))
         }
       } catch {
-        const stored = await getStoredUser()
-        if (stored?.user) setUser(normalizeUser(stored.user))
-        else {
-          api.logout()
-          clearStoredUser()
-        }
+        api.logout()
       } finally {
         setLoading(false)
       }
@@ -42,13 +32,11 @@ export function AuthProvider({ children }) {
   const login = async (userData) => {
     const u = normalizeUser(userData.user)
     setUser(u)
-    await setStoredUser(userData.user, userData.token)
   }
 
   const logout = () => {
     setUser(null)
     api.logout()
-    clearStoredUser()
   }
 
   return (

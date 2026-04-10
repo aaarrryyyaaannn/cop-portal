@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { api } from '../lib/api'
-import { getCachedFirs } from '../lib/db'
 import { BarChart3, MapPin, TrendingUp } from 'lucide-react'
 
 export default function ReportsAnalytics() {
@@ -18,22 +17,8 @@ export default function ReportsAnalytics() {
           closedRate: data.closedRate || 0,
           byCrime: data.byCrime || []
         })
-      } catch {
-        const cached = await getCachedFirs()
-        const total = cached.length
-        const closed = cached.filter((f) => f.status === 'closed').length
-        const byCrime = {}
-        cached.forEach((f) => {
-          const t = f.incident?.crimeType || 'Other'
-          byCrime[t] = (byCrime[t] || 0) + 1
-        })
-        setStats({
-          total,
-          pending: total - closed,
-          closed,
-          closedRate: total ? Math.round((closed / total) * 100) : 0,
-          byCrime: Object.entries(byCrime).map(([name, count]) => ({ _id: name, count }))
-        })
+      } catch (err) {
+        console.error('Failed to load reports:', err)
       } finally {
         setLoading(false)
       }

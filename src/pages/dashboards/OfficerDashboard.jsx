@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { FileText, Bell } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
-import { getCachedFirs } from '../../lib/db'
 
 const notifications = [
   { text: 'Court date: FIR #2024-142 - Feb 25, 2025', urgent: true },
@@ -18,9 +17,8 @@ export default function OfficerDashboard() {
       try {
         const data = await api.getFirs()
         setFirs(Array.isArray(data) ? data : [])
-      } catch {
-        const cached = await getCachedFirs()
-        setFirs(cached)
+      } catch (err) {
+        console.error('Failed to load FIRs:', err)
       } finally {
         setLoading(false)
       }
@@ -82,9 +80,8 @@ export default function OfficerDashboard() {
                     <td className="py-3 font-medium">{fir.firNumber}</td>
                     <td className="py-3">{fir.incident?.crimeType || '-'}</td>
                     <td className="py-3">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                        fir.status === 'investigation' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
-                      }`}>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${fir.status === 'investigation' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
+                        }`}>
                         {fir.status === 'investigation' ? 'In Progress' : fir.status || 'Pending'}
                       </span>
                     </td>

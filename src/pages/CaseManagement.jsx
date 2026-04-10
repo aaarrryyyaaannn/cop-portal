@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { api } from '../lib/api'
-import { getCachedFirs } from '../lib/db'
-import { cacheFirs } from '../lib/db'
 import { Search, ChevronDown, UserPlus, FileText } from 'lucide-react'
 
 function statusLabel(s) {
@@ -25,10 +23,8 @@ export default function CaseManagement() {
         const [firList, userList] = await Promise.all([api.getFirs(), api.getUsers().catch(() => [])])
         setFirs(Array.isArray(firList) ? firList : [])
         setUsers(Array.isArray(userList) ? userList : [])
-        await cacheFirs(firList || [])
-      } catch {
-        const cached = await getCachedFirs()
-        setFirs(cached)
+      } catch (err) {
+        console.error('Failed to load cases:', err)
       } finally {
         setLoading(false)
       }
@@ -131,10 +127,9 @@ export default function CaseManagement() {
                       <td className="px-6 py-4">{fir.incident?.crimeType || '-'}</td>
                       <td className="px-6 py-4">{fir.complainant?.name || '-'}</td>
                       <td className="px-6 py-4">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                          fir.status === 'closed' ? 'bg-emerald-100 text-emerald-800' :
-                          fir.status === 'investigation' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
-                        }`}>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${fir.status === 'closed' ? 'bg-emerald-100 text-emerald-800' :
+                            fir.status === 'investigation' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
+                          }`}>
                           {statusLabel(fir.status)}
                         </span>
                       </td>

@@ -18,7 +18,7 @@ router.get('/stats', authenticate, requireRole('admin', 'officer'), async (req, 
 
     const monthly = await FIR.aggregate([
       { $match: { createdAt: { $gte: sixMonthsAgo } } },
-      { $group: { _id: { $month: '$createdAt', $year: '$createdAt' }, count: { $sum: 1 } } },
+      { $group: { _id: { month: { $month: '$createdAt' }, year: { $year: '$createdAt' } }, count: { $sum: 1 } } },
       { $sort: { '_id.year': 1, '_id.month': 1 } }
     ])
 
@@ -35,7 +35,8 @@ router.get('/stats', authenticate, requireRole('admin', 'officer'), async (req, 
       byCrime
     })
   } catch (err) {
-    res.status(500).json({ message: 'Server error' })
+    console.error(err)
+    res.status(500).json({ message: 'Server error', error: err.stack || err.toString() })
   }
 })
 

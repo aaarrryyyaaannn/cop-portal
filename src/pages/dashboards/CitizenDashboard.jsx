@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { FileText, Search, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
-import { getCachedFirs } from '../../lib/db'
 
 export default function CitizenDashboard() {
   const [firs, setFirs] = useState([])
@@ -13,9 +12,8 @@ export default function CitizenDashboard() {
       try {
         const data = await api.getFirs()
         setFirs(Array.isArray(data) ? data : [])
-      } catch {
-        const cached = await getCachedFirs()
-        setFirs(cached)
+      } catch (err) {
+        console.error('Failed to load FIRs:', err)
       } finally {
         setLoading(false)
       }
@@ -68,10 +66,9 @@ export default function CitizenDashboard() {
                   <p className="text-sm text-slate-500">Filed on {fir.createdAt ? new Date(fir.createdAt).toLocaleDateString() : '-'}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                    fir.status === 'investigation' || fir.status === 'assigned' ? 'bg-amber-100 text-amber-800' :
-                    fir.status === 'closed' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'
-                  }`}>
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${fir.status === 'investigation' || fir.status === 'assigned' ? 'bg-amber-100 text-amber-800' :
+                      fir.status === 'closed' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'
+                    }`}>
                     {fir.status === 'investigation' ? 'In Progress' : fir.status?.charAt(0)?.toUpperCase() + fir.status?.slice(1) || 'Filed'}
                   </span>
                   <Link

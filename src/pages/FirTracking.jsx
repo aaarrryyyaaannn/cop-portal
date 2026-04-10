@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../lib/api'
-import { getCachedFirs } from '../lib/db'
 import { FileText, UserPlus, Search, CheckCircle, Clock, Phone } from 'lucide-react'
 
 const statusSteps = [
@@ -29,14 +28,7 @@ export default function FirTracking() {
       const fir = await api.trackFir(searchId)
       setResult(fir)
     } catch (err) {
-      if (!navigator.onLine) {
-        const cached = await getCachedFirs()
-        const found = cached.find((f) => f.firNumber?.toLowerCase() === searchId.toLowerCase())
-        setResult(found || null)
-        if (!found) setError('No FIR found. You are offline.')
-      } else {
-        setError(err.message || 'FIR not found')
-      }
+      setError(err.message || 'FIR not found')
     } finally {
       setLoading(false)
     }
@@ -71,10 +63,9 @@ export default function FirTracking() {
             <h2 className="font-semibold text-slate-900 mb-4">FIR Status</h2>
             <div className="flex flex-wrap gap-4 items-center mb-6">
               <span className="text-slate-600">FIR Number: <strong>{result.firNumber}</strong></span>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                result.status === 'closed' ? 'bg-emerald-100 text-emerald-800' :
-                result.status === 'investigation' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
-              }`}>
+              <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${result.status === 'closed' ? 'bg-emerald-100 text-emerald-800' :
+                  result.status === 'investigation' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
+                }`}>
                 {result.status?.charAt(0)?.toUpperCase() + result.status?.slice(1)}
               </span>
               <span className="text-slate-500 text-sm">Filed on {result.createdAt ? new Date(result.createdAt).toLocaleDateString() : '-'}</span>

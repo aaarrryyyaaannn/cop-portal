@@ -121,6 +121,24 @@ export const api = {
 
   async getReports() {
     return request('/reports/stats')
+  },
+
+  async getWorkforce() { return request('/workforce') },
+  async getWorkforceTasks() { return request('/workforce/tasks') },
+  async createWorkforceTask(taskData) {
+    return request('/workforce/tasks', { method: 'POST', body: JSON.stringify(taskData) })
+  },
+  async updateWorkforceTask(id, status) {
+    return request(`/workforce/tasks/${id}`, { method: 'PUT', body: JSON.stringify({ status }) })
+  },
+  async getAlerts() { return request('/alerts') },
+  async createAlert(alertData) {
+    return request('/alerts', { method: 'POST', body: JSON.stringify(alertData) })
+  },
+  async getCrimeHotspots() { return request('/firs/data/hotspots') },
+  async getCriminals() { return request('/criminals') },
+  async createCriminal(criminalData) {
+    return request('/criminals', { method: 'POST', body: JSON.stringify(criminalData) })
   }
 }
 

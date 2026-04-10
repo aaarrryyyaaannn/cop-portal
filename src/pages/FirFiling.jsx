@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../lib/api'
-import { addPendingFir } from '../lib/db'
 import { ChevronRight, ChevronLeft, Upload, X } from 'lucide-react'
 
 const crimeTypes = ['Theft', 'Assault', 'Cybercrime', 'Fraud', 'Robbery', 'Domestic Violence', 'Other']
@@ -81,12 +80,7 @@ export default function FirFiling() {
       alert(`FIR submitted successfully! FIR Number: ${data.firNumber}`)
       window.location.href = '/'
     } catch (err) {
-      if (!navigator.onLine) {
-        await addPendingFir(firPayload())
-        alert('You are offline. FIR saved locally and will sync when online.')
-      } else {
-        setError(err.message || 'Submission failed')
-      }
+      setError(err.message || 'Submission failed')
     } finally {
       setSubmitting(false)
     }
