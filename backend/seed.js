@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import User from './models/User.js'
 import FIR from './models/FIR.js'
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fir-portal'
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://devkararyan45_db_user:arya1201@copconnect.tot1a9t.mongodb.net/'
 
 async function seed() {
   await mongoose.connect(MONGODB_URI)

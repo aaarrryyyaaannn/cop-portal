@@ -76,7 +76,7 @@ export default function Login() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 outline-none transition"
-                placeholder="admin / officer1 / citizen1"
+                placeholder="enter the username"
               />
             </div>
 
@@ -88,7 +88,7 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 outline-none transition pr-10"
-                  placeholder="admin123 / officer123 / citizen123"
+                  placeholder="enter the password"
                 />
                 <button
                   type="button"
